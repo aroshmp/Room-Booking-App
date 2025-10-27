@@ -1,11 +1,72 @@
-.venv
+# Conference Room Booking System - .gitignore
+# This file tells Git which files to IGNORE (not upload to GitHub)
+
+# ===== ENVIRONMENT FILES (CRITICAL - NEVER UPLOAD!) =====
 .env
-.idea/Room-Booking-App.iml
-.idea/copilot.data.migration.agent.xml
-.idea/copilot.data.migration.ask.xml
-.idea/copilot.data.migration.ask2agent.xml
-.idea/copilot.data.migration.edit.xml
-.idea/inspectionProfiles/
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
+.env.*
+!.env.example
+
+# ===== VIRTUAL ENVIRONMENT =====
+.venv
+venv/
+env/
+ENV/
+
+# ===== PYTHON CACHE =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ===== PYTEST / COVERAGE =====
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+coverage.xml
+*.cover
+
+# ===== IDE SPECIFIC =====
+# PyCharm
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# ===== OS SPECIFIC =====
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ===== BUILD / DISTRIBUTION =====
+build/
+dist/
+*.egg-info/
+*.egg
+
+# ===== LOGS =====
+*.log
+logs/
+
+# ===== DATABASE / LOCAL DATA =====
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== TEMPORARY FILES =====
+*.tmp
+*.bak
+*.swp
+*~
+
+# ===== NODE MODULES (for future frontend) =====
+node_modules/
+# package-lock.json
+yarn.lock
