@@ -1,6 +1,6 @@
 // src/components/RoomList.js
 import React, { useState, useEffect } from 'react';
-import { roomsAPI } from '../services/api';
+import { roomAPI } from '../services/api'; // ← FIXED: removed 's' from roomsAPI
 import './RoomList.css';
 
 function RoomList({ onSelectRoom }) {
@@ -19,11 +19,11 @@ function RoomList({ onSelectRoom }) {
   const fetchRooms = async (filterParams = {}) => {
     try {
       setLoading(true);
-      const data = await roomsAPI.getAllRooms(filterParams);
+      const data = await roomAPI.getAllRooms(filterParams); // ← FIXED
       setRooms(data.rooms || []);
       setError(null);
     } catch (err) {
-      setError('Failed to load rooms. Make sure Flask server is running on port 5000.');
+      setError('Failed to load rooms. Make sure your backend is running.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -117,13 +117,15 @@ function RoomList({ onSelectRoom }) {
                 </div>
               </div>
 
-              <button
-                onClick={() => onSelectRoom(room)}
-                className="btn-book"
-                disabled={room.status !== 'available'}
-              >
-                Book This Room
-              </button>
+              {onSelectRoom && (
+                <button
+                  onClick={() => onSelectRoom(room)}
+                  className="btn-book"
+                  disabled={room.status !== 'available'}
+                >
+                  Book This Room
+                </button>
+              )}
             </div>
           ))
         )}
