@@ -1,38 +1,38 @@
-# Render Blueprint Configuration for Conference Room Booking API
-# Save this file as: render.yaml in your PROJECT ROOT directory
+# CORRECT Render Configuration - Points to app_enhanced.py
+# Replace your current render.yaml with this file
 
 services:
-  # Flask Backend API Service
   - type: web
     name: room-booking-api
     env: python
-    region: oregon  # Options: oregon, frankfurt, singapore, ohio (choose closest to you)
-    plan: free      # Free tier - perfect for prototypes
+    region: oregon
+    plan: free
 
     # Build Configuration
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app_enhanced:app --bind 0.0.0.0:$PORT --workers 2 --timeout 60
+
+    # CRITICAL: Point to app_enhanced.py, not app.py!
+    startCommand: gunicorn app_enhanced:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120 --log-level info --access-logfile - --error-logfile -
 
     # Health Check
     healthCheckPath: /
 
-    # Auto-deploy settings
-    autoDeploy: true  # Automatically deploy when you push to GitHub
+    # Auto-deploy
+    autoDeploy: true
 
     # Environment Variables
-    # These will be set in Render Dashboard (we'll do this in next steps)
     envVars:
       - key: AWS_ACCESS_KEY_ID
-        sync: false  # Set manually in Render Dashboard for security
+        sync: false
 
       - key: AWS_SECRET_ACCESS_KEY
-        sync: false  # Set manually in Render Dashboard for security
+        sync: false
 
       - key: AWS_DEFAULT_REGION
-        value: us-east-1  # Change this to your AWS region if different
+        value: us-east-1
 
       - key: FLASK_ENV
         value: production
 
       - key: PYTHON_VERSION
-        value: 3.11.0  # Render will use Python 3.11
+        value: 3.11.0
