@@ -1,4 +1,4 @@
-# CORRECT Render Configuration - Points to app_enhanced.py
+# UPDATED Render Configuration with SendGrid (US-03)
 # Replace your current render.yaml with this file
 
 services:
@@ -11,7 +11,7 @@ services:
     # Build Configuration
     buildCommand: pip install -r requirements.txt
 
-    # CRITICAL: Point to app_enhanced.py, not app.py!
+    # Start Command
     startCommand: gunicorn app_enhanced:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120 --log-level info --access-logfile - --error-logfile -
 
     # Health Check
@@ -22,6 +22,7 @@ services:
 
     # Environment Variables
     envVars:
+      # AWS DynamoDB
       - key: AWS_ACCESS_KEY_ID
         sync: false
 
@@ -31,8 +32,16 @@ services:
       - key: AWS_DEFAULT_REGION
         value: us-east-1
 
+      # Flask
       - key: FLASK_ENV
         value: production
 
       - key: PYTHON_VERSION
         value: 3.11.0
+
+      # US-03: SendGrid Email Configuration
+      - key: SENDGRID_API_KEY
+        sync: false  # You'll add this manually in Render dashboard
+
+      - key: SENDGRID_FROM_EMAIL
+        value: doxdoxdox9@gmail.com # UPDATE THIS with your verified sender email
