@@ -13,7 +13,7 @@ function RoomList({ onSelectRoom }) {
     amenities: '',
   });
 
-  // US-02: State for booking modal
+  // US-02: State for booking modal -
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
 

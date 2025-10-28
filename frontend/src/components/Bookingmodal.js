@@ -121,7 +121,7 @@ function BookingModal({ room, onClose, onBookingSuccess }) {
   };
 
   const handleBackdropClick = (e) => {
-    // Close modal when clicking outside the modal content
+    // Close modal when clicking outside the modal content -
     if (e.target.classList.contains('modal-backdrop')) {
       onClose();
     }
