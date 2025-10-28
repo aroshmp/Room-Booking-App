@@ -37,16 +37,13 @@ def generate_icalendar(booking_data):
     # Create location string
     location = booking_data.get('room_location', booking_data['room_name'])
 
-    # Create description
-    description = f"""Conference Room Booking
-Booking ID: {booking_data['booking_id']}
-Room: {booking_data['room_name']}
-Location: {location}
-
-Please arrive 5 minutes early to set up.
-
-This booking was made through the Conference Room Booking System.
-"""
+    # Create description (without f-string to avoid backslash issues)
+    description = "Conference Room Booking\\n"
+    description += f"Booking ID: {booking_data['booking_id']}\\n"
+    description += f"Room: {booking_data['room_name']}\\n"
+    description += f"Location: {location}\\n\\n"
+    description += "Please arrive 5 minutes early to set up.\\n\\n"
+    description += "This booking was made through the Conference Room Booking System."
 
     # Generate iCalendar content (RFC 5545 format)
     ics_content = f"""BEGIN:VCALENDAR
@@ -61,7 +58,7 @@ DTSTART:{start_str}
 DTEND:{end_str}
 SUMMARY:{booking_data['room_name']} - Conference Room Booking
 LOCATION:{location}
-DESCRIPTION:{description.replace(chr(10), '\\n')}
+DESCRIPTION:{description}
 STATUS:CONFIRMED
 SEQUENCE:0
 ORGANIZER:mailto:noreply@roombooking.com
