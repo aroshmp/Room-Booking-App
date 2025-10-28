@@ -1,6 +1,7 @@
 // src/components/RoomList.js
 import React, { useState, useEffect } from 'react';
-import { roomAPI } from '../services/api'; // ← FIXED: removed 's' from roomsAPI
+import { roomAPI } from '../services/api';
+import BookingModal from './BookingModal'; // Import the new BookingModal component
 import './RoomList.css';
 
 function RoomList({ onSelectRoom }) {
@@ -12,6 +13,10 @@ function RoomList({ onSelectRoom }) {
     amenities: '',
   });
 
+  // US-02: State for booking modal
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+
   useEffect(() => {
     fetchRooms();
   }, []);
@@ -19,7 +24,7 @@ function RoomList({ onSelectRoom }) {
   const fetchRooms = async (filterParams = {}) => {
     try {
       setLoading(true);
-      const data = await roomAPI.getAllRooms(filterParams); // ← FIXED
+      const data = await roomAPI.getAllRooms(filterParams);
       setRooms(data.rooms || []);
       setError(null);
     } catch (err) {
@@ -44,6 +49,30 @@ function RoomList({ onSelectRoom }) {
 
   const handleClearFilters = () => {
     setFilters({ capacity: '', amenities: '' });
+    fetchRooms();
+  };
+
+  // US-02: Handle "Book This Room" button click
+  const handleBookRoom = (room) => {
+    setSelectedRoom(room);
+    setShowBookingModal(true);
+
+    // Call parent callback if provided (for future use)
+    if (onSelectRoom) {
+      onSelectRoom(room);
+    }
+  };
+
+  // US-02: Handle modal close
+  const handleCloseModal = () => {
+    setShowBookingModal(false);
+    setSelectedRoom(null);
+  };
+
+  // US-02: Handle successful booking
+  const handleBookingSuccess = (booking) => {
+    console.log('Booking created successfully:', booking);
+    // Optionally refresh room list to update availability
     fetchRooms();
   };
 
@@ -117,19 +146,27 @@ function RoomList({ onSelectRoom }) {
                 </div>
               </div>
 
-              {onSelectRoom && (
-                <button
-                  onClick={() => onSelectRoom(room)}
-                  className="btn-book"
-                  disabled={room.status !== 'available'}
-                >
-                  Book This Room
-                </button>
-              )}
+              {/* US-02: Updated Book This Room button */}
+              <button
+                onClick={() => handleBookRoom(room)}
+                className="btn-book"
+                disabled={room.status !== 'available'}
+              >
+                Book This Room
+              </button>
             </div>
           ))
         )}
       </div>
+
+      {/* US-02: Booking Modal */}
+      {showBookingModal && selectedRoom && (
+        <BookingModal
+          room={selectedRoom}
+          onClose={handleCloseModal}
+          onBookingSuccess={handleBookingSuccess}
+        />
+      )}
     </div>
   );
 }
