@@ -229,6 +229,7 @@ def create_booking_endpoint():
         return jsonify({
             'status': 'success',
             'message': 'Booking created successfully',
+            'booking_id': booking_record['booking_id'],
             'booking': booking_record
         }), 201
 
