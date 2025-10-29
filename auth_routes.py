@@ -1,31 +1,37 @@
-# app_enhanced.py - Conference Room Booking System with Authentication
+# app_enhanced.py - COMPLETE VERSION WITH US-06 AUTHENTICATION
 """
-Complete backend with US-01 through US-06
-Includes authentication, room booking, and all features
+Conference Room Booking System - Flask Backend
+Includes US-01 through US-06
 """
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime, timedelta
 import uuid
+import os
+from dotenv import load_dotenv
+
+# US-06: Authentication imports
 import jwt
 import hashlib
 import secrets
 from functools import wraps
 
+# Load environment variables
+load_dotenv()
+
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-# ============================================
-# CONFIGURATION
-# ============================================
-SECRET_KEY = 'your-secret-key-change-in-production'
+# Configuration
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
+SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
 SESSION_TIMEOUT = 7200  # 2 hours in seconds
 
 
 # ============================================
-# AUTHENTICATION HELPER FUNCTIONS
+# US-06: AUTHENTICATION HELPER FUNCTIONS
 # ============================================
 
 def hash_password(password):
@@ -64,7 +70,7 @@ def verify_token(token):
 
 
 def get_user_by_email(email):
-    """Get user from demo database"""
+    """Get user from database (demo users for prototype)"""
     demo_users = {
         'demo@company.com': {
             'user_id': 'user-demo-001',
@@ -124,9 +130,10 @@ def require_auth(role=None):
 
 
 # ============================================
-# MOCK DATABASE
+# MOCK DATABASE (Replace with DynamoDB in production)
 # ============================================
 
+# Mock rooms database
 ROOMS = [
     {
         'room_id': 'room-001',
@@ -151,6 +158,7 @@ ROOMS = [
     }
 ]
 
+# Mock bookings database
 BOOKINGS = []
 
 
@@ -166,7 +174,6 @@ def home():
         'message': 'Conference Room Booking API is running',
         'version': '1.0.0',
         'endpoints': {
-            'health': '/',
             'rooms': '/api/rooms',
             'bookings': '/api/bookings',
             'auth': '/api/auth/*'
@@ -302,10 +309,16 @@ def login():
 @app.route('/api/auth/logout', methods=['POST'])
 def logout():
     """US-06: User logout endpoint"""
-    return jsonify({
-        'status': 'success',
-        'message': 'Logout successful'
-    }), 200
+    try:
+        return jsonify({
+            'status': 'success',
+            'message': 'Logout successful'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Logout failed: {str(e)}'
+        }), 500
 
 
 @app.route('/api/auth/verify', methods=['GET'])
@@ -423,23 +436,23 @@ def refresh_token():
 # ============================================
 
 if __name__ == '__main__':
-    print("\n" + "=" * 60)
-    print("🚀 Conference Room Booking System - Backend API")
+    print("=" * 60)
+    print("Conference Room Booking System - Backend API")
     print("=" * 60)
     print("\n📍 Available Endpoints:")
-    print("   GET  /                          - Health check")
-    print("   GET  /api/rooms                 - List all rooms")
-    print("   POST /api/bookings              - Create booking")
+    print("   GET  /                     - Health check")
+    print("   GET  /api/rooms            - List all rooms")
+    print("   POST /api/bookings         - Create booking")
     print("   GET  /api/bookings/user/<email> - Get user bookings")
-    print("   POST /api/auth/login            - User login")
-    print("   POST /api/auth/logout           - User logout")
-    print("   GET  /api/auth/verify           - Verify token")
-    print("   POST /api/auth/reset-password   - Reset password")
-    print("   POST /api/auth/refresh          - Refresh token")
+    print("   POST /api/auth/login       - User login")
+    print("   POST /api/auth/logout      - User logout")
+    print("   GET  /api/auth/verify      - Verify token")
+    print("   POST /api/auth/reset-password - Reset password")
+    print("   POST /api/auth/refresh     - Refresh token")
     print("\n🔐 Demo Credentials:")
     print("   Email: demo@company.com")
     print("   Password: demo123")
-    print("\n🌐 Server starting on: http://localhost:5000")
-    print("=" * 60 + "\n")
+    print("\n🚀 Server starting...")
+    print("=" * 60)
 
     app.run(debug=True, host='0.0.0.0', port=5000)

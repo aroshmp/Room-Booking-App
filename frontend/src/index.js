@@ -9,3 +9,7 @@ root.render(
     <App />
   </React.StrictMode>
 );
+
+// Optional: If you want to measure performance in your app
+// import reportWebVitals from './reportWebVitals';
+// reportWebVitals();
