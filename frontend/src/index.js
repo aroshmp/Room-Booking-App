@@ -1,18 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import ProtectedApp from './ProtectedApp';
-import reportWebVitals from './reportWebVitals';
+import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ProtectedApp />
+    <App />
   </React.StrictMode>
 );
 
-// Optional: log metrics to console for development
-reportWebVitals(console.log);
-
-// Or, just call without argument in production
+// Optional: If you want to measure performance in your app
+// import reportWebVitals from './reportWebVitals';
 // reportWebVitals();
